@@ -20,6 +20,7 @@ export default function Home() {
   const [signedMessage, setSignedMessage] = useState<string | undefined>(
     undefined
   );
+  const [verified, setVerified] = useState<string | undefined>(undefined);
 
   const createAAWallet = async () => {
     setLoading(true);
@@ -48,7 +49,7 @@ export default function Home() {
 
   const signMessage = async () => {
     const message =
-      "Hey, this app is requesting your signature to prove the ownership of this walelt!";
+      "Hey, this app is requesting your signature to prove the ownership of this wallet!";
     // Sign the message
     const signature = await wallet!.signMessage(message);
 
@@ -56,12 +57,18 @@ export default function Home() {
   };
 
   const verifyMessage = async () => {
-    const message = "Hello, world!";
+    const message =
+      "Hey, this app is requesting your signature to prove the ownership of this wallet!";
     // Verify the message
     const isVerified = await wallet!.verifyMessage(
       message,
       signedMessage || ""
     );
+    if (isVerified) {
+      setVerified("Message verified");
+    } else {
+      setVerified("Message not verified");
+    }
     console.log(isVerified ? "Message verified" : "Message not verified");
   };
 
@@ -116,6 +123,10 @@ export default function Home() {
           <div>
             <button onClick={signMessage}>Sign Message</button>
             {signedMessage && <div>Signed Message: {signedMessage}</div>}
+          </div>
+          <div>
+            <button onClick={verifyMessage}>Verify Message</button>
+            {verified && <div>Verification: {verified}</div>}
           </div>
         </>
       )}
