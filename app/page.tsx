@@ -24,6 +24,7 @@ export default function Home() {
   const [signedTypeData, setSignedTypeData] = useState<string | undefined>(
     undefined
   );
+  const [txId, setTxId] = useState<string | undefined>(undefined);
 
   const createAAWallet = async () => {
     setLoading(true);
@@ -115,6 +116,24 @@ export default function Home() {
     setSignedTypeData(signature);
   };
 
+  const sendTransaction = async () => {
+    if (!wallet) {
+      return "The wallet is not initialized";
+    }
+
+    // Define the transaction parameters
+    const transaction = {
+      to: "0x6f30064f170921209b3f9e5f968bb3f59d598fe4", // Recipient address
+      gasLimit: 21000, // Gas limit for the transaction (optional)
+      gasPrice: parseUnits("20", "gwei"), // Gas price for the transaction (optional)
+      data: "0x6057361d0000000000000000000000000000000000000000000000000000000000000022", // Arbitrary data, such as input parameters for smart contract functions or additional transaction details. (Optional)
+    };
+
+    // Send the transaction
+    const txnResult = await wallet.sendTransaction(transaction);
+    setTxId(txnResult.hash);
+  };
+
   const getAddress = async () => {
     if (!wallet) {
       return "The wallet is not initialized";
@@ -174,6 +193,10 @@ export default function Home() {
           <div>
             <button onClick={signTypedData}>Sign Typed Data</button>
             {signedTypeData && <div>Sign Typed Data: {signedTypeData}</div>}
+          </div>
+          <div>
+            <button onClick={sendTransaction}>Send Transaction</button>
+            {txId && <div>TxId: {txId}</div>}
           </div>
         </>
       )}
