@@ -7,7 +7,8 @@ import {
   EVMAAWallet,
 } from "@crossmint/client-sdk-aa";
 import { useState } from "react";
-import { parseUnits, formatEther } from "ethers";
+import { ethers } from "ethers";
+const { parseUnits, formatEther } = ethers.utils;
 
 const userIdentifier = { email: "rrohitramesh710@gmail.com" };
 
@@ -16,6 +17,9 @@ export default function Home() {
   const [balance, setBalance] = useState<string | undefined>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
+  const [signedMessage, setSignedMessage] = useState<string | undefined>(
+    undefined
+  );
 
   const createAAWallet = async () => {
     setLoading(true);
@@ -40,6 +44,25 @@ export default function Home() {
     setBalance(undefined);
     setAddress(undefined);
     setLoading(false);
+  };
+
+  const signMessage = async () => {
+    const message =
+      "Hey, this app is requesting your signature to prove the ownership of this walelt!";
+    // Sign the message
+    const signature = await wallet!.signMessage(message);
+
+    setSignedMessage(signature);
+  };
+
+  const verifyMessage = async () => {
+    const message = "Hello, world!";
+    // Verify the message
+    const isVerified = await wallet!.verifyMessage(
+      message,
+      signedMessage || ""
+    );
+    console.log(isVerified ? "Message verified" : "Message not verified");
   };
 
   const getAddress = async () => {
@@ -90,6 +113,10 @@ export default function Home() {
           <div>
             <button onClick={purgeAAWalletData}>Purge wallet data</button>
           </div>
+          <div>
+            <button onClick={signMessage}>Sign Message</button>
+            {signedMessage && <div>Signed Message: {signedMessage}</div>}
+          </div>
         </>
       )}
     </div>
@@ -112,7 +139,7 @@ const createAAWalletHelper = async () => {
 
   return xm.getOrCreateWallet(
     userIdentifier,
-    Blockchain.ASTAR_ZKEVM,
+    Blockchain.ZKATANA,
     walletInitParams
   );
 };
@@ -137,7 +164,7 @@ const userIdentifier = { phoneNumber: <phoneNumber> };*/
 
   return xm.getOrCreateWallet(
     userIdentifier,
-    Blockchain.ASTAR_ZKEVM,
+    Blockchain.ZKATANA,
     walletInitParams
   );
 };
