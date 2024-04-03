@@ -21,6 +21,9 @@ export default function Home() {
     undefined
   );
   const [verified, setVerified] = useState<string | undefined>(undefined);
+  const [signedTypeData, setSignedTypeData] = useState<string | undefined>(
+    undefined
+  );
 
   const createAAWallet = async () => {
     setLoading(true);
@@ -70,6 +73,46 @@ export default function Home() {
       setVerified("Message not verified");
     }
     console.log(isVerified ? "Message verified" : "Message not verified");
+  };
+
+  const signTypedData = async () => {
+    // Define your object with properties itemName and rarity
+    if (!wallet) {
+      return "The wallet is not initialized";
+    }
+
+    const yourObject = {
+      itemName: "Your Item Name",
+      rarity: "Rare",
+    };
+
+    // Define the schema according to EIP-712
+    const domain = {
+      name: "YourDomain",
+      version: "1",
+      chainId: 1, // Chain ID of Ethereum mainnet, change accordingly
+      verifyingContract: "0xYourVerifyingContractAddress" as `0x${string}`, // Replace with the contract address
+    };
+
+    const types = {
+      YourObject: [
+        { name: "itemName", type: "string" },
+        { name: "rarity", type: "string" },
+      ],
+    };
+
+    // Create a typed data object
+    const typedData = {
+      types: types,
+      primaryType: "YourObject",
+      domain: domain,
+      message: yourObject,
+    };
+    wallet.sendUserOperation;
+    const signature = await wallet.signTypedData(typedData);
+    console.log("Typed Data:", typedData);
+    console.log("Signed Data:", signature);
+    setSignedTypeData(signature);
   };
 
   const getAddress = async () => {
@@ -127,6 +170,10 @@ export default function Home() {
           <div>
             <button onClick={verifyMessage}>Verify Message</button>
             {verified && <div>Verification: {verified}</div>}
+          </div>
+          <div>
+            <button onClick={signTypedData}>Sign Typed Data</button>
+            {signedTypeData && <div>Sign Typed Data: {signedTypeData}</div>}
           </div>
         </>
       )}
