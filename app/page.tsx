@@ -91,7 +91,7 @@ export default function Home() {
     const domain = {
       name: "YourDomain",
       version: "1",
-      chainId: 1, // Chain ID of Ethereum mainnet, change accordingly
+      chainId: 1261120, // Chain ID of Ethereum mainnet, change accordingly
       verifyingContract: "0xYourVerifyingContractAddress" as `0x${string}`, // Replace with the contract address
     };
 
