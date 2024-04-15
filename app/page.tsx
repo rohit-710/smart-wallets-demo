@@ -220,7 +220,7 @@ const createAAWalletHelper = async () => {
 
   return xm.getOrCreateWallet(
     userIdentifier,
-    Blockchain.ZKATANA,
+    Blockchain.ETHEREUM_SEPOLIA,
     walletInitParams
   );
 };
@@ -245,7 +245,7 @@ const userIdentifier = { phoneNumber: <phoneNumber> };*/
 
   return xm.getOrCreateWallet(
     userIdentifier,
-    Blockchain.ZKATANA,
+    Blockchain.ETHEREUM_SEPOLIA,
     walletInitParams
   );
 };
